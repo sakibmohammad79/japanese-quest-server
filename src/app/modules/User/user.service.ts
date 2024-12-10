@@ -1,4 +1,4 @@
-import { Prisma, User } from "@prisma/client";
+import { Prisma, Role, User, UserStatus } from "@prisma/client";
 import prisma from "../../../Shared/prisma";
 import ApiError from "../../error/ApiError";
 import { StatusCodes } from "http-status-codes";
@@ -113,8 +113,96 @@ const getSingleUserByID = async (id: string) => {
 
   return UserData;
 };
+
+const deleteUserFromDB = async (id: string): Promise<User | null> => {
+  const User = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  const DeleteUserData = await prisma.user.delete({
+    where: {
+      id: User.id,
+    },
+  });
+
+  return DeleteUserData;
+};
+
+const softDeleteUserFromDB = async (id: string): Promise<User | null> => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+
+  const userSoftDeleteData = await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      isDeleted: true,
+    },
+  });
+
+  return userSoftDeleteData;
+};
+
+const updateUserIntoDB = async (
+  id: string,
+  payload: Partial<User>
+): Promise<User | null> => {
+  const user = await prisma.user.findUniqueOrThrow({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+
+  const isActiveUser = await prisma.user.findUnique({
+    where: {
+      email: user.email,
+      status: UserStatus.ACTIVE,
+    },
+  });
+  if (!isActiveUser) {
+    throw new ApiError(
+      StatusCodes.UNAUTHORIZED,
+      "This user blocked or deleted by admin!"
+    );
+  }
+  const updatedAdminData = await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: payload,
+  });
+  return updatedAdminData;
+};
+
+const changeUserStatus = async (id: string, status: Role) => {
+  const user = await prisma.user.findFirstOrThrow({
+    where: {
+      id,
+    },
+  });
+
+  const updateUserStatus = await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: status,
+  });
+  return updateUserStatus;
+};
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
   getSingleUserByID,
+  deleteUserFromDB,
+  softDeleteUserFromDB,
+  updateUserIntoDB,
+  changeUserStatus,
 };

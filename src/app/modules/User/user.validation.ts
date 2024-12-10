@@ -1,3 +1,4 @@
+import { UserStatus } from "@prisma/client";
 import { z } from "zod";
 
 // User Registration Schema
@@ -22,6 +23,11 @@ export const userUpdateSchema = z.object({
   email: z.string().email("Invalid email address").optional(),
   photoUrl: z.string().optional(),
 });
+const changeUserStatusSchema = z.object({
+  status: z.enum([UserStatus.ACTIVE, UserStatus.BLOCKED, UserStatus.DELETED]),
+});
 export const UserValidationSchema = {
   userRegistrationSchema,
+  changeUserStatusSchema,
+  userUpdateSchema,
 };
