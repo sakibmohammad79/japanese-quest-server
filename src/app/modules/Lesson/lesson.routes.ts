@@ -6,8 +6,8 @@ import { LessonValidationSchema } from "./lesson.validation";
 
 const router = Router();
 
-// router.get("/", UserController.getAllUser);
-// router.get("/:id", UserController.getSingleUser);
+router.get("/", LessonController.getAllLesson);
+router.get("/:id", LessonController.singleLesson);
 router.post(
   "/",
   // Guard(Role.ADMIN),
@@ -15,25 +15,13 @@ router.post(
   LessonController.createLesson
 );
 
-// router.delete("/:id", UserController.deleteUser);
+router.delete("/:id", LessonController.deleteLesson);
 
-// router.delete(
-//   "/soft/:id",
-//   // Guard(UserRole.ADMIN),
-//   UserController.softDeleteUser
-// );
-
-// router.patch(
-//   "/status/:id",
-//   // Guard(UserRole.ADMIN),
-//   validateRequest(UserValidationSchema.changeUserStatusSchema),
-//   UserController.changeUserStatus
-// );
-// router.patch(
-//   "/:id",
-//   // Guard(UserRole.ADMIN),
-//   validateRequest(UserValidationSchema.userUpdateSchema),
-//   UserController.updateUser
-// );
+router.patch(
+  "/:id",
+  // Guard(UserRole.ADMIN),
+  validateRequest(LessonValidationSchema.updateLessonSchema),
+  LessonController.updateLesson
+);
 
 export const LessonRoutes = router;
