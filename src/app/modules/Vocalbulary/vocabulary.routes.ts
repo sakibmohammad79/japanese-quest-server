@@ -5,7 +5,8 @@ import { VocabularyValidationSchema } from "./vocabulary.validation";
 
 const router = Router();
 
-// router.get("/", UserController.getAllUser);
+router.get("/", VocabularyController.getAllVocabulary);
+router.get("/:id", VocabularyController.getAllVocabularyByLesson);
 // router.get("/:id", UserController.getSingleUser);
 router.post(
   "/",
