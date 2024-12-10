@@ -6,8 +6,11 @@ import { VocabularyValidationSchema } from "./vocabulary.validation";
 const router = Router();
 
 router.get("/", VocabularyController.getAllVocabulary);
-router.get("/:id", VocabularyController.getAllVocabularyByLesson);
-// router.get("/:id", UserController.getSingleUser);
+
+router.get("/lesson/:id", VocabularyController.getAllVocabularyByLesson);
+
+router.get("/:id", VocabularyController.getSingleVocabulary);
+
 router.post(
   "/",
   // Guard(Role.ADMIN),
@@ -15,25 +18,13 @@ router.post(
   VocabularyController.createVocabulary
 );
 
-// router.delete("/:id", UserController.deleteUser);
+router.delete("/:id", VocabularyController.deleteVocabulary);
 
-// router.delete(
-//   "/soft/:id",
-//   // Guard(UserRole.ADMIN),
-//   UserController.softDeleteUser
-// );
-
-// router.patch(
-//   "/status/:id",
-//   // Guard(UserRole.ADMIN),
-//   validateRequest(UserValidationSchema.changeUserStatusSchema),
-//   UserController.changeUserStatus
-// );
-// router.patch(
-//   "/:id",
-//   // Guard(UserRole.ADMIN),
-//   validateRequest(UserValidationSchema.userUpdateSchema),
-//   UserController.updateUser
-// );
+router.patch(
+  "/:id",
+  // Guard(UserRole.ADMIN),
+  validateRequest(VocabularyValidationSchema.updateVocabularySchema),
+  VocabularyController.updateVocabulary
+);
 
 export const VocabularyRoutes = router;

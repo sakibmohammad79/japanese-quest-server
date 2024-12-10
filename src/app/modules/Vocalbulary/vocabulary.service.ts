@@ -185,67 +185,57 @@ const getAllVocabularyByLesson = async (
   };
 };
 
-// const updateLessonIntoDB = async (
-//   id: string,
-//   payload: Partial<Lesson>
-// ): Promise<Lesson | null> => {
-//   const lesson = await prisma.lesson.findUniqueOrThrow({
-//     where: {
-//       id,
-//     },
-//   });
+const getSingleVocabularyByID = async (id: string) => {
+  const vocabulary = await prisma.vocabulary.findFirstOrThrow({
+    where: {
+      id,
+    },
+  });
 
-//   if (!lesson) {
-//     throw new ApiError(StatusCodes.NOT_FOUND, "Lesson not exits!");
-//   }
-//   const updatedLessonData = await prisma.lesson.update({
-//     where: {
-//       id: lesson.id,
-//     },
-//     data: payload,
-//   });
-//   return updatedLessonData;
-// };
+  return vocabulary;
+};
 
-// const getSingleLessonByID = async (id: string) => {
-//   const LessonData = await prisma.lesson.findFirstOrThrow({
-//     where: {
-//       id,
-//     },
-//   });
+const updateVocabularyIntoDB = async (
+  id: string,
+  payload: Partial<Vocabulary>
+): Promise<Vocabulary | null> => {
+  const vocabulary = await prisma.vocabulary.findUniqueOrThrow({
+    where: {
+      id,
+    },
+  });
 
-//   return LessonData;
-// };
+  if (!vocabulary) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Vocabulary not exits!");
+  }
+  const updatedVocabularyData = await prisma.vocabulary.update({
+    where: {
+      id: vocabulary.id,
+    },
+    data: payload,
+  });
+  return updatedVocabularyData;
+};
 
-// const deleteLessonFromDB = async (id: string): Promise<Lesson | null> => {
-//   //  Find the lesson
-//   const lesson = await prisma.lesson.findUniqueOrThrow({
-//     where: { id },
-//   });
+const deleteVocabularyFromDB = async (
+  id: string
+): Promise<Vocabulary | null> => {
+  //  Find the lesson
+  const vocabulary = await prisma.vocabulary.findUniqueOrThrow({
+    where: { id },
+  });
 
-//   // Check if there are any vocabularies related to this lesson
-//   const vocabulariesExist = await prisma.vocabulary.count({
-//     where: { lessonId: lesson.id },
-//   });
+  const deletedVocabulary = await prisma.vocabulary.delete({
+    where: { id: vocabulary.id },
+  });
 
-//   //If vocabularies exist, delete them
-//   if (vocabulariesExist > 0) {
-//     await prisma.vocabulary.deleteMany({
-//       where: { lessonId: lesson.id },
-//     });
-//   } else {
-//     console.log("No vocabularies found for this lesson.");
-//   }
-
-//   //Delete the lesson itself
-//   const deletedLesson = await prisma.lesson.delete({
-//     where: { id: lesson.id },
-//   });
-
-//   return deletedLesson;
-// };
+  return deletedVocabulary;
+};
 export const VocabularyServices = {
   createVocabularyIntoDB,
   getAllVocabularyFromDB,
   getAllVocabularyByLesson,
+  getSingleVocabularyByID,
+  updateVocabularyIntoDB,
+  deleteVocabularyFromDB,
 };

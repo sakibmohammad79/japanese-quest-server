@@ -21,6 +21,28 @@ const createvocabularySchema = z.object({
   adminId: z.string().uuid({ message: "Admin ID must be a valid UUID." }),
 });
 
+const updateVocabularySchema = z.object({
+  word: z
+    .string()
+    .min(2, { message: "Word must be at least 2 characters long." })
+    .optional(),
+  pronunciation: z
+    .string()
+    .regex(/^\/.+\/$/, {
+      message: "Pronunciation must start and end with '/'.",
+    })
+    .optional(),
+  meaning: z
+    .string()
+    .min(5, { message: "Meaning must be at least 5 characters long." })
+    .optional(),
+  whenToSay: z
+    .string()
+    .min(5, { message: "WhenToSay must be at least 5 characters long." })
+    .optional(),
+});
+
 export const VocabularyValidationSchema = {
   createvocabularySchema,
+  updateVocabularySchema,
 };

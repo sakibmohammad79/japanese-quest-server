@@ -51,41 +51,47 @@ const getAllVocabularyByLesson: RequestHandler = catchAsync(
   }
 );
 
-// const updateLesson: RequestHandler = catchAsync(async (req, res, next) => {
-//   const { id } = req.params;
-//   const data = req.body;
-//   const result = await LessonServices.updateLessonIntoDB(id, data);
-//   sendResponse(res, {
-//     statusCode: StatusCodes.OK,
-//     success: true,
-//     message: "Lesson data updated successfully!",
-//     data: result,
-//   });
-// });
+const getSingleVocabulary: RequestHandler = catchAsync(
+  async (req, res, next) => {
+    const { id } = req.params;
+    const result = await VocabularyServices.getSingleVocabularyByID(id);
+    sendResponse(res, {
+      statusCode: StatusCodes.OK,
+      success: true,
+      message: "Single vocabulary get successfully!",
+      data: result,
+    });
+  }
+);
 
-// const singleLesson: RequestHandler = catchAsync(async (req, res, next) => {
-//   const { id } = req.params;
-//   const result = await LessonServices.getSingleLessonByID(id);
-//   sendResponse(res, {
-//     statusCode: StatusCodes.OK,
-//     success: true,
-//     message: "Single lesson get successfully!",
-//     data: result,
-//   });
-// });
-// const deleteLesson: RequestHandler = catchAsync(async (req, res, next) => {
-//   const { id } = req.params;
-//   const result = await LessonServices.deleteLessonFromDB(id);
-//   sendResponse(res, {
-//     statusCode: StatusCodes.OK,
-//     success: true,
-//     message: "Lesson deleted successfully!",
-//     data: result,
-//   });
-// });
+const updateVocabulary: RequestHandler = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const data = req.body;
+  const result = await VocabularyServices.updateVocabularyIntoDB(id, data);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Vocabulary data updated successfully!",
+    data: result,
+  });
+});
+
+const deleteVocabulary: RequestHandler = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await VocabularyServices.deleteVocabularyFromDB(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Vocabulary deleted successfully!",
+    data: result,
+  });
+});
 
 export const VocabularyController = {
   createVocabulary,
   getAllVocabulary,
   getAllVocabularyByLesson,
+  getSingleVocabulary,
+  updateVocabulary,
+  deleteVocabulary,
 };
