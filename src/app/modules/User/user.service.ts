@@ -4,10 +4,11 @@ import ApiError from "../../error/ApiError";
 import { StatusCodes } from "http-status-codes";
 import bcrypt from "bcrypt";
 
-const createAdminIntoDB = async (payload: any): Promise<User> => {
+const createUserIntoDB = async (payload: any): Promise<User> => {
+  console.log(payload);
   const admin = await prisma.user.findUnique({
     where: {
-      email: payload.body.user.email,
+      email: payload.user.email,
     },
   });
 
@@ -15,9 +16,12 @@ const createAdminIntoDB = async (payload: any): Promise<User> => {
     throw new ApiError(StatusCodes.CONFLICT, "This email already registered!");
   }
 
-  const hashedPassword = await bcrypt.hash(payload.body.password, 12);
+  const hashedPassword = await bcrypt.hash(payload.password, 12);
 
   const adminData = {
+    name: payload.user.name,
+    email: payload.user.email,
+    photoUrl: payload.user.photoUrl,
     password: hashedPassword,
   };
   const createdUserData = await prisma.user.create({
@@ -28,5 +32,5 @@ const createAdminIntoDB = async (payload: any): Promise<User> => {
 };
 
 export const UserServices = {
-  createAdminIntoDB,
+  createUserIntoDB,
 };

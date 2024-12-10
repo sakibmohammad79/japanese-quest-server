@@ -4,8 +4,8 @@ import { UserServices } from "./user.service";
 import { sendResponse } from "../../../Shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 
-const createAdmin: RequestHandler = catchAsync(async (req, res, next) => {
-  const result = await UserServices.createAdminIntoDB(req.body);
+const createUser: RequestHandler = catchAsync(async (req, res) => {
+  const result = await UserServices.createUserIntoDB(req.body);
   sendResponse(res, {
     statusCode: StatusCodes.OK,
     success: true,
