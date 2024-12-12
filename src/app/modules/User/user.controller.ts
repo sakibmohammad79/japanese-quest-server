@@ -91,6 +91,26 @@ const changeUserStatus: RequestHandler = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const makeAdmin: RequestHandler = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.makeAdminIntoDB(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Update user role, This user now admin!",
+    data: result,
+  });
+});
+const makeUser: RequestHandler = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await UserServices.makeUserDB(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Update user role, This user now user!",
+    data: result,
+  });
+});
 
 export const UserController = {
   createUser,
@@ -100,4 +120,6 @@ export const UserController = {
   softDeleteUser,
   updateUser,
   changeUserStatus,
+  makeAdmin,
+  makeUser,
 };

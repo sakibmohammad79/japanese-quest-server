@@ -12,11 +12,6 @@ export const createLessonSchema = z.object({
     .max(500, "Description cannot exceed 500 characters")
     .optional(),
   imageUrl: z.string().url("Invalid image URL").optional(),
-  lessonNumber: z
-    .number()
-    .int("Lesson number must be an integer")
-    .positive("Lesson number must be a positive integer"),
-  isPublish: z.boolean().optional(),
 });
 
 // Validation schema for updating a lesson
@@ -35,12 +30,6 @@ export const updateLessonSchema = z.object({
     .max(500, "Description cannot exceed 500 characters")
     .optional(),
   imageUrl: z.string().url("Invalid image URL").optional(),
-  lessonNumber: z
-    .number()
-    .int("Lesson number must be an integer")
-    .positive("Lesson number must be a positive integer")
-    .optional(),
-  isPublish: z.boolean().optional(),
 });
 
 export const LessonValidationSchema = {

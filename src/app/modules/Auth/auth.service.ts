@@ -10,13 +10,16 @@ const loginUserIntoDB = async (payload: {
   password: string;
   email: string;
 }) => {
-  const user = await prisma.user.findFirstOrThrow({
+  console.log(payload);
+  const user = await prisma.user.findUnique({
     where: {
       email: payload.email,
       status: UserStatus.ACTIVE,
       isDeleted: false,
     },
   });
+
+  console.log(user);
 
   if (!user) {
     throw new ApiError(StatusCodes.NOT_FOUND, "User does not exists!");
@@ -36,6 +39,7 @@ const loginUserIntoDB = async (payload: {
     email: user.email,
     role: user.role,
   };
+  console.log(jwtPayload);
   //generate accessToken
   const accessToken = await jwtHelpers.generateToken(
     jwtPayload,

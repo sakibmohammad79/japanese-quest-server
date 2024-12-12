@@ -11,30 +11,30 @@ router.get("/", UserController.getAllUser);
 router.get("/:id", UserController.getSingleUser);
 router.post(
   "/",
-  // Guard(Role.ADMIN),
+  Guard(Role.ADMIN),
   validateRequest(UserValidationSchema.userRegistrationSchema),
   UserController.createUser
 );
 
-router.delete("/:id", UserController.deleteUser);
+router.delete("/:id", Guard(Role.ADMIN), UserController.deleteUser);
 
-router.delete(
-  "/soft/:id",
-  // Guard(UserRole.ADMIN),
-  UserController.softDeleteUser
-);
+router.delete("/soft/:id", Guard(Role.ADMIN), UserController.softDeleteUser);
 
 router.patch(
   "/status/:id",
-  // Guard(UserRole.ADMIN),
+  Guard(Role.ADMIN),
   validateRequest(UserValidationSchema.changeUserStatusSchema),
   UserController.changeUserStatus
 );
+
 router.patch(
   "/:id",
-  // Guard(UserRole.ADMIN),
+  Guard(Role.ADMIN),
   validateRequest(UserValidationSchema.userUpdateSchema),
   UserController.updateUser
 );
+router.patch("/admin/:id", Guard(Role.ADMIN), UserController.makeAdmin);
+
+router.patch("/user/:id", Guard(Role.ADMIN), UserController.makeUser);
 
 export const UserRoutes = router;

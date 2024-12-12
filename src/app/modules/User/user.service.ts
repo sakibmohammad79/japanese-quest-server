@@ -8,7 +8,6 @@ import { paginationHelpers } from "../../../Helper/paginationHelpers";
 import { userSearchableFields } from "./user.constant";
 
 const createUserIntoDB = async (payload: any): Promise<User> => {
-  console.log(payload);
   const admin = await prisma.user.findUnique({
     where: {
       email: payload.user.email,
@@ -197,6 +196,47 @@ const changeUserStatus = async (id: string, status: Role) => {
   });
   return updateUserStatus;
 };
+
+const makeAdminIntoDB = async (id: string) => {
+  const user = await prisma.user.findUnique({
+    where: {
+      id,
+      role: Role.USER,
+    },
+  });
+  if (!user) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "User not found!");
+  }
+  const makeAdminData = await prisma.user.update({
+    where: {
+      id: user.id,
+    },
+    data: {
+      role: Role.ADMIN,
+    },
+  });
+  return makeAdminData;
+};
+const makeUserDB = async (id: string) => {
+  const admin = await prisma.user.findUnique({
+    where: {
+      id,
+      role: Role.ADMIN,
+    },
+  });
+  if (!admin) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Admin not found!");
+  }
+  const makeUserData = await prisma.user.update({
+    where: {
+      id: admin.id,
+    },
+    data: {
+      role: Role.USER,
+    },
+  });
+  return makeUserData;
+};
 export const UserServices = {
   createUserIntoDB,
   getAllUserFromDB,
@@ -205,4 +245,6 @@ export const UserServices = {
   softDeleteUserFromDB,
   updateUserIntoDB,
   changeUserStatus,
+  makeAdminIntoDB,
+  makeUserDB,
 };

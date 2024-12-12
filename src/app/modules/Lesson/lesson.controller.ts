@@ -5,6 +5,7 @@ import { sendResponse } from "../../../Shared/sendResponse";
 import { StatusCodes } from "http-status-codes";
 import { userFilterableFields } from "../User/user.constant";
 import { pick } from "../../../Shared/pick";
+import { vocabularyFilterableFields } from "../Vocalbulary/vocabulary.constant";
 
 const createLesson: RequestHandler = catchAsync(async (req, res) => {
   const result = await LessonServices.createLessonIntoDB(req.body);
@@ -17,7 +18,7 @@ const createLesson: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getAllLesson: RequestHandler = catchAsync(async (req, res) => {
-  const filters = pick(req.query, userFilterableFields);
+  const filters = pick(req.query, vocabularyFilterableFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await LessonServices.getAllLessonFromDB(filters, options);
 
@@ -62,6 +63,16 @@ const deleteLesson: RequestHandler = catchAsync(async (req, res, next) => {
     data: result,
   });
 });
+const publishLesson: RequestHandler = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const result = await LessonServices.publishLessonIntoDB(id);
+  sendResponse(res, {
+    statusCode: StatusCodes.OK,
+    success: true,
+    message: "Lesson Published successfully!",
+    data: result,
+  });
+});
 
 export const LessonController = {
   createLesson,
@@ -69,4 +80,5 @@ export const LessonController = {
   updateLesson,
   singleLesson,
   deleteLesson,
+  publishLesson,
 };

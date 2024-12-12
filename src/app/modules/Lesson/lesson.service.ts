@@ -17,8 +17,18 @@ const createLessonIntoDB = async (payload: any): Promise<Lesson> => {
   if (!user) {
     throw new ApiError(StatusCodes.NOT_FOUND, "User not exits!");
   }
+
+  const lastLesson = await prisma.lesson.findFirst({
+    orderBy: { lessonNumber: "desc" },
+  });
+
+  const nextLessonNumber = (lastLesson?.lessonNumber || 0) + 1;
+
   const createLessonData = await prisma.lesson.create({
-    data: payload,
+    data: {
+      ...payload,
+      lessonNumber: nextLessonNumber,
+    },
   });
   return createLessonData;
 };
@@ -143,6 +153,39 @@ const deleteLessonFromDB = async (id: string): Promise<Lesson | null> => {
 
   return deletedLesson;
 };
+const publishLessonIntoDB = async (id: string) => {
+  //  Find the lesson
+  const lesson = await prisma.lesson.findUnique({
+    where: { id },
+  });
+
+  if (!lesson) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Lesson Not Found!");
+  }
+  // check is already published
+  const isPublished = await prisma.lesson.findUnique({
+    where: {
+      id: lesson.id,
+      isPublish: true,
+    },
+  });
+
+  if (isPublished) {
+    throw new ApiError(StatusCodes.NOT_FOUND, "Lesson Already Published!");
+  }
+
+  //Delete the lesson itself
+  const publishLesson = await prisma.lesson.update({
+    where: {
+      id: lesson.id,
+    },
+    data: {
+      isPublish: true,
+    },
+  });
+
+  return publishLesson;
+};
 
 export const LessonServices = {
   createLessonIntoDB,
@@ -150,4 +193,5 @@ export const LessonServices = {
   updateLessonIntoDB,
   getSingleLessonByID,
   deleteLessonFromDB,
+  publishLessonIntoDB,
 };

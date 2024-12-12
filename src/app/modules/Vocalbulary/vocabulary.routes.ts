@@ -2,6 +2,8 @@ import { Router } from "express";
 import { validateRequest } from "../../middleware/validationRequest";
 import { VocabularyController } from "./vocabulary.controller";
 import { VocabularyValidationSchema } from "./vocabulary.validation";
+import Guard from "../../middleware/guard";
+import { Role } from "@prisma/client";
 
 const router = Router();
 
@@ -13,16 +15,16 @@ router.get("/:id", VocabularyController.getSingleVocabulary);
 
 router.post(
   "/",
-  // Guard(Role.ADMIN),
-  validateRequest(VocabularyValidationSchema.createvocabularySchema),
+  Guard(Role.ADMIN),
+  // validateRequest(VocabularyValidationSchema.createvocabularySchema),
   VocabularyController.createVocabulary
 );
 
-router.delete("/:id", VocabularyController.deleteVocabulary);
+router.delete("/:id", Guard(Role.ADMIN), VocabularyController.deleteVocabulary);
 
 router.patch(
   "/:id",
-  // Guard(UserRole.ADMIN),
+  Guard(Role.ADMIN),
   validateRequest(VocabularyValidationSchema.updateVocabularySchema),
   VocabularyController.updateVocabulary
 );

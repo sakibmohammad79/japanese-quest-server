@@ -5,6 +5,7 @@ import { sendResponse } from "../../../Shared/sendResponse";
 import { VocabularyServices } from "./vocabulary.service";
 import { userFilterableFields } from "../User/user.constant";
 import { pick } from "../../../Shared/pick";
+import { vocabularyFilterableFields } from "./vocabulary.constant";
 
 const createVocabulary: RequestHandler = catchAsync(async (req, res) => {
   const result = await VocabularyServices.createVocabularyIntoDB(req.body);
@@ -17,7 +18,7 @@ const createVocabulary: RequestHandler = catchAsync(async (req, res) => {
 });
 
 const getAllVocabulary: RequestHandler = catchAsync(async (req, res) => {
-  const filters = pick(req.query, userFilterableFields);
+  const filters = pick(req.query, vocabularyFilterableFields);
   const options = pick(req.query, ["page", "limit", "sortBy", "sortOrder"]);
   const result = await VocabularyServices.getAllVocabularyFromDB(
     filters,
