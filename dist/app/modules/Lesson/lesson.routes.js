@@ -1,0 +1,20 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.LessonRoutes = void 0;
+const express_1 = require("express");
+const validationRequest_1 = require("../../middleware/validationRequest");
+const lesson_controller_1 = require("./lesson.controller");
+const lesson_validation_1 = require("./lesson.validation");
+const guard_1 = __importDefault(require("../../middleware/guard"));
+const client_1 = require("@prisma/client");
+const router = (0, express_1.Router)();
+router.get("/", lesson_controller_1.LessonController.getAllLesson);
+router.get("/:id", lesson_controller_1.LessonController.singleLesson);
+router.post("/", (0, guard_1.default)(client_1.Role.ADMIN), (0, validationRequest_1.validateRequest)(lesson_validation_1.LessonValidationSchema.createLessonSchema), lesson_controller_1.LessonController.createLesson);
+router.delete("/:id", (0, guard_1.default)(client_1.Role.ADMIN), lesson_controller_1.LessonController.deleteLesson);
+router.patch("/:id", (0, guard_1.default)(client_1.Role.ADMIN), (0, validationRequest_1.validateRequest)(lesson_validation_1.LessonValidationSchema.updateLessonSchema), lesson_controller_1.LessonController.updateLesson);
+router.patch("/publish/:id", (0, guard_1.default)(client_1.Role.ADMIN), lesson_controller_1.LessonController.publishLesson);
+exports.LessonRoutes = router;

@@ -4,7 +4,7 @@ import { z } from "zod";
 export const createLessonSchema = z.object({
   name: z
     .string()
-    .min(3, "Lesson name must be at least 3 characters long")
+    .min(1, "Lesson name must be at least 3 characters long")
     .max(100, "Lesson name cannot exceed 100 characters"),
   content: z.string().max(800, "content cannot exceed 500 characters"),
   description: z
@@ -18,7 +18,7 @@ export const createLessonSchema = z.object({
 export const updateLessonSchema = z.object({
   name: z
     .string()
-    .min(3, "Lesson name must be at least 3 characters long")
+    .min(1, "Lesson name must be at least 3 characters long")
     .max(100, "Lesson name cannot exceed 100 characters")
     .optional(),
   content: z
